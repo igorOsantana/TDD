@@ -1,5 +1,5 @@
-import { SignUpController } from './signup';
-import { MissingParamError } from '../errors/missing-param';
+import { SignUpController } from '.';
+import { MissingParamError } from '../../errors/missing-param';
 
 describe('Sign Up Controller', () => {
   test('Should return 400 if name is not provided by request body', () => {
