@@ -26,10 +26,10 @@ const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     add(account: AddAccountModel): AccountModel {
       const fakeAccount = {
-        id: 'any_id',
-        name: 'any_name',
-        email: 'any_email@mail.com',
-        password: 'any_password',
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'valid_password',
       };
       return fakeAccount;
     }
@@ -179,7 +179,7 @@ describe('Sign Up Controller', () => {
     const httpReq = {
       body: {
         name: 'any_name',
-        email: 'invalid_email@mail.com',
+        email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
@@ -216,7 +216,7 @@ describe('Sign Up Controller', () => {
     const httpReq = {
       body: {
         name: 'any_name',
-        email: 'invalid_email@mail.com',
+        email: 'any_email@mail.com',
         password: 'any_password',
         passwordConfirmation: 'any_password',
       },
@@ -224,5 +224,25 @@ describe('Sign Up Controller', () => {
     const httpRes = sut.handle(httpReq);
     expect(httpRes.statusCode).toBe(500);
     expect(httpRes.body).toEqual(new ServerError());
+  });
+
+  test('Should return 200 if valid data is provided', () => {
+    const { sut } = makeSut();
+    const httpReq = {
+      body: {
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password',
+      },
+    };
+    const httpRes = sut.handle(httpReq);
+    expect(httpRes.statusCode).toBe(200);
+    expect(httpRes.body).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+    });
   });
 });
