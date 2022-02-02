@@ -23,14 +23,23 @@ export class SignUpController implements Controller {
     ];
     try {
       for (const field of requiredFields) {
-        if (!httpReq.body[field])
+        if (!httpReq.body[field]) {
           return badRequest(new MissingParamError(field));
+        }
       }
       const { email, password, passwordConfirmation } = httpReq.body;
-      if (password !== passwordConfirmation)
+
+      if (password.length < 6) {
+        return badRequest(new InvalidParamError('password'));
+      }
+
+      if (password !== passwordConfirmation) {
         return badRequest(new InvalidParamError('passwordConfirmation'));
-      if (!this.emailValidator.isValid(email))
+      }
+
+      if (!this.emailValidator.isValid(email)) {
         return badRequest(new InvalidParamError('email'));
+      }
     } catch (error) {
       console.error('sign_up_controller_handle_error: ', error);
       return internalServerError();
