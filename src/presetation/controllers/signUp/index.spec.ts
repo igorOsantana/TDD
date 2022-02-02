@@ -4,7 +4,7 @@ import {
   MissingParamError,
   InvalidParamError,
   ServerError,
-} from '../../errors/';
+} from '../../errors';
 
 import {
   EmailValidator,

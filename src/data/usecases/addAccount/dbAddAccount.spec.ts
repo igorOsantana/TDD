@@ -5,11 +5,6 @@ import {
   Encrypter,
   AddAccountRepository,
 } from './dbAddAccountProtocols';
-interface SutTypes {
-  sut: DbAddAccount;
-  encrypterStub: Encrypter;
-  addAccountRepositoryStub: AddAccountRepository;
-}
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
@@ -35,6 +30,12 @@ const makeAddAccountRepository = (): AddAccountRepository => {
   }
   return new AddAccountRepositoryStub();
 };
+
+interface SutTypes {
+  sut: DbAddAccount;
+  encrypterStub: Encrypter;
+  addAccountRepositoryStub: AddAccountRepository;
+}
 
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter();
