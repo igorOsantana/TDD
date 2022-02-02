@@ -1,3 +1,3 @@
-export * from './missing-param';
-export * from './invalid-param';
+export * from './missingParam';
+export * from './invalidParam';
 export * from './server';
