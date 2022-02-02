@@ -58,6 +58,21 @@ describe('Sign Up Controller', () => {
     expect(httpRes.body).toEqual(new MissingParamError('email'));
   });
 
+  test('Should return 400 if password length is less than six character', () => {
+    const { sut } = makeSut();
+    const httpReq = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@mail.com',
+        password: 'any_p',
+        passwordConfirmation: 'any_p',
+      },
+    };
+    const httpRes = sut.handle(httpReq);
+    expect(httpRes.statusCode).toBe(400);
+    expect(httpRes.body).toEqual(new InvalidParamError('password'));
+  });
+
   test('Should return 400 if password is not provided by request body', () => {
     const { sut } = makeSut();
     const httpReq = {
