@@ -6,12 +6,12 @@ import {
   ServerError,
 } from '../../errors/';
 
-import { EmailValidator } from '../../protocols';
-import { AccountModel } from '../../../domain/models/account';
 import {
+  EmailValidator,
+  AccountModel,
   AddAccount,
   AddAccountModel,
-} from '../../../domain/usecases/add-account';
+} from './protocol';
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
