@@ -1,9 +1,22 @@
 import { DbAddAccount } from './dbAddAccount';
-import { Encrypter } from './dbAddAccountProtocols';
+import {
+  AccountModel,
+  AddAccountModel,
+  Encrypter,
+  AddAccountRepository,
+} from './dbAddAccountProtocols';
 interface SutTypes {
   sut: DbAddAccount;
   encrypterStub: Encrypter;
+  addAccountRepositoryStub: AddAccountRepository;
 }
+
+const makeFakeAccount = (): AccountModel => ({
+  id: 'valid_id',
+  name: 'valid_name',
+  email: 'valid_email@mail.com',
+  password: 'hashed_password',
+});
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
@@ -14,11 +27,22 @@ const makeEncrypter = (): Encrypter => {
   return new EncrypterStub();
 };
 
+const makeAddAccountRepository = (): AddAccountRepository => {
+  class AddAccountRepositoryStub implements AddAccountRepository {
+    async add(account: AddAccountModel): Promise<AccountModel> {
+      return new Promise(resolve => resolve(makeFakeAccount()));
+    }
+  }
+  return new AddAccountRepositoryStub();
+};
+
 const makeSut = (): SutTypes => {
   const encrypterStub = makeEncrypter();
+  const addAccountRepositoryStub = makeAddAccountRepository();
   return {
-    sut: new DbAddAccount(encrypterStub),
+    sut: new DbAddAccount(encrypterStub, addAccountRepositoryStub),
     encrypterStub,
+    addAccountRepositoryStub,
   };
 };
 
@@ -47,5 +71,21 @@ describe('DbAddAccount Usecase', () => {
     };
     const promise = sut.add(account);
     await expect(promise).rejects.toThrow();
+  });
+
+  test('Should call AddAccountRepository with correct values', async () => {
+    const { sut, addAccountRepositoryStub } = makeSut();
+    const addSpy = jest.spyOn(addAccountRepositoryStub, 'add');
+    const account = {
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password',
+    };
+    await sut.add(account);
+    expect(addSpy).toHaveBeenCalledWith({
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'hashed_password',
+    });
   });
 });
