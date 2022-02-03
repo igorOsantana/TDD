@@ -15,7 +15,6 @@ export class AccountMongoRepository implements AddAccountRepository {
 
     if (findAccount === null) return null;
 
-    const { _id, ...account } = findAccount;
-    return { id: String(_id), ...(account as AccountModel) };
+    return MongoHelper.map<AccountModel>(findAccount);
   }
 }
