@@ -5,6 +5,7 @@ import {
   badRequest,
   internalServerError,
   unauthorized,
+  ok,
 } from '../../helpers/http';
 import { HttpRequest } from '../../protocols';
 import { EmailValidator } from '../../protocols/emailValidator';
@@ -28,7 +29,7 @@ const makeEmailValidator = (): EmailValidator => {
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
     async auth(email: string, password: string): Promise<string> {
-      return '';
+      return Promise.resolve('any_token');
     }
   }
   return new AuthenticationStub();
@@ -129,5 +130,13 @@ describe('Login Controller', () => {
     const httpRes = await sut.handle(makeFakeRequest());
 
     expect(httpRes).toEqual(internalServerError(new Error()));
+  });
+
+  test('Should return 200 if valiid credencials are provided', async () => {
+    const { sut } = makeSut();
+
+    const httpRes = await sut.handle(makeFakeRequest());
+
+    expect(httpRes).toEqual(ok({ accessToken: 'any_token' }));
   });
 });
