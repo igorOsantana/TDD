@@ -1,7 +1,11 @@
 import { Login } from '.';
 import { Authentication } from '../../../domain/usecases/authentication';
 import { InvalidParamError, MissingParamError } from '../../errors';
-import { badRequest, internalServerError } from '../../helpers/http';
+import {
+  badRequest,
+  internalServerError,
+  unauthorized,
+} from '../../helpers/http';
 import { HttpRequest } from '../../protocols';
 import { EmailValidator } from '../../protocols/emailValidator';
 
@@ -105,5 +109,15 @@ describe('Login Controller', () => {
     const { email, password } = makeFakeRequest().body;
 
     expect(authSpy).toHaveBeenCalledWith(email, password);
+  });
+
+  test('Should return 401 if invalid credencials are provided', async () => {
+    const { sut, authenticationStub } = makeSut();
+    jest
+      .spyOn(authenticationStub, 'auth')
+      .mockReturnValueOnce(Promise.resolve(null));
+    const httpRes = await sut.handle(makeFakeRequest());
+
+    expect(httpRes).toEqual(unauthorized());
   });
 });
