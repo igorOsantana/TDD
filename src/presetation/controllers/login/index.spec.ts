@@ -21,4 +21,15 @@ describe('Login Controller', () => {
     const httpRes = await sut.handle(HttpRequest);
     expect(httpRes).toEqual(badRequest(new MissingParamError('email')));
   });
+
+  test('Should return 400 if password is not provided by request body', async () => {
+    const { sut } = makeSut();
+    const HttpRequest = {
+      body: {
+        email: 'any_email@mail.com',
+      },
+    };
+    const httpRes = await sut.handle(HttpRequest);
+    expect(httpRes).toEqual(badRequest(new MissingParamError('password')));
+  });
 });
