@@ -4,6 +4,7 @@ import {
   badRequest,
   internalServerError,
   unauthorized,
+  ok,
 } from '../../helpers/http';
 
 import {
@@ -40,7 +41,7 @@ export class Login implements Controller {
       const accessToken = await this.authentication.auth(email, password);
       if (!accessToken) return unauthorized();
 
-      return Promise.resolve(null);
+      return ok({ accessToken });
     } catch (error) {
       return internalServerError(error);
     }
