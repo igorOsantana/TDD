@@ -12,6 +12,7 @@ import {
   AddAccount,
   AddAccountModel,
   HttpRequest,
+  Validation,
 } from './protocol';
 
 import { ok, internalServerError, badRequest } from '../../helpers/http';
@@ -50,19 +51,35 @@ const makeFakeRequest = (): HttpRequest => ({
   },
 });
 
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate(input: any): Error {
+      return null;
+    }
+  }
+  return new ValidationStub();
+};
+
 interface SutTypes {
   sut: SignUpController;
   emailValidatorStub: EmailValidator;
   addAccountStub: AddAccount;
+  validationStub: Validation;
 }
 
 const makeSut = async (): Promise<SutTypes> => {
   const emailValidatorStub = makeEmailValidator();
   const addAccountStub = await makeAddAccount();
+  const validationStub = makeValidation();
   return {
-    sut: new SignUpController(emailValidatorStub, addAccountStub),
+    sut: new SignUpController(
+      emailValidatorStub,
+      addAccountStub,
+      validationStub
+    ),
     emailValidatorStub,
     addAccountStub,
+    validationStub,
   };
 };
 
@@ -204,5 +221,14 @@ describe('Sign Up Controller', () => {
     const httpRes = await sut.handle(makeFakeRequest());
 
     expect(httpRes).toEqual(ok(makeFakeAccount()));
+  });
+
+  test('Should call Validation with correct value ', async () => {
+    const { sut, validationStub } = await makeSut();
+    const validateSpy = jest.spyOn(validationStub, 'validate');
+    const httpReq = makeFakeRequest();
+    await sut.handle(httpReq);
+
+    expect(validateSpy).toHaveBeenCalledWith(httpReq.body);
   });
 });
