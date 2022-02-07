@@ -7,6 +7,12 @@ export const adapterRoute = (controller: Controller) => {
       body: req.body,
     };
     const httpRes = await controller.handle(httpReq);
-    res.status(httpRes.statusCode).json(httpRes.body);
+    if (httpRes.statusCode === 200) {
+      res.status(httpRes.statusCode).json(httpRes.body);
+    } else {
+      res.status(httpRes.statusCode).json({
+        error: httpRes.body.message,
+      });
+    }
   };
 };
