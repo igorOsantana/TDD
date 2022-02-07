@@ -14,15 +14,15 @@ export class Login implements Controller {
   }
 
   async handle(req: HttpRequest): Promise<HttpResponse> {
+    const requiredFields = ['email', 'password'];
     try {
+      for (const field of requiredFields) {
+        if (!req.body[field]) {
+          return badRequest(new MissingParamError(field));
+        }
+      }
       const { email, password } = req.body;
 
-      if (!email) {
-        return badRequest(new MissingParamError('email'));
-      }
-      if (!password) {
-        return badRequest(new MissingParamError('password'));
-      }
       if (!this.emailValidator.isValid(email)) {
         return badRequest(new InvalidParamError('email'));
       }

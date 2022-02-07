@@ -103,6 +103,7 @@ describe('Login Controller', () => {
 
     await sut.handle(makeFakeRequest());
     const { email, password } = makeFakeRequest().body;
+
     expect(authSpy).toHaveBeenCalledWith(email, password);
   });
 });
