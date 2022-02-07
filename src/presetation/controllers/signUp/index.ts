@@ -31,7 +31,10 @@ export class SignUpController implements Controller {
       'passwordConfirmation',
     ];
     try {
-      this.validation.validate(httpReq.body);
+      const error = this.validation.validate(httpReq.body);
+      if (error) {
+        return badRequest(error);
+      }
       for (const field of requiredFields) {
         if (!httpReq.body[field]) {
           return badRequest(new MissingParamError(field));
