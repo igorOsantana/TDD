@@ -11,7 +11,7 @@ const makeSut = (): SutTypes => {
   };
 };
 
-describe('Required Field Validationn', () => {
+describe('Required Field Validation', () => {
   test('Should return MissingParamError if validation fails', () => {
     const { sut } = makeSut();
     const error = sut.validate({});
