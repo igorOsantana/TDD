@@ -18,7 +18,7 @@ const makeSut = (): SutTypes => {
 const makeValidationStub = (): Validation => {
   class ValidationStub implements Validation {
     validate(input: any): Error {
-      return new InvalidParamError('field');
+      return null;
     }
   }
 
@@ -27,7 +27,10 @@ const makeValidationStub = (): Validation => {
 
 describe('Composite Validation', () => {
   test('Should return an error if any validation fails', () => {
-    const { sut } = makeSut();
+    const { sut, validationStub } = makeSut();
+    jest
+      .spyOn(validationStub, 'validate')
+      .mockReturnValueOnce(new InvalidParamError('field'));
     const error = sut.validate({ field: 'any_value' });
 
     expect(error).toEqual(new InvalidParamError('field'));
