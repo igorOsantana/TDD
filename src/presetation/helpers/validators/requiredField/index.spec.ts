@@ -18,4 +18,11 @@ describe('Required Field Validationn', () => {
 
     expect(error).toEqual(new MissingParamError('any_field'));
   });
+
+  test('Should return falsy value on success validation', () => {
+    const { sut } = makeSut();
+    const error = sut.validate({ any_field: 'any_value' });
+
+    expect(error).toBeFalsy();
+  });
 });
