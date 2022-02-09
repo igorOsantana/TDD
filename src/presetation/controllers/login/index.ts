@@ -11,7 +11,7 @@ import {
   HttpRequest,
   HttpResponse,
   Validation,
-} from './protocol';
+} from './protocols';
 
 export class Login implements Controller {
   private readonly authentication: Authentication;

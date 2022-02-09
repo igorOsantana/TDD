@@ -8,7 +8,7 @@ import {
   AddAccountModel,
   HttpRequest,
   Validation,
-} from './protocol';
+} from './protocols';
 
 import { ok, internalServerError, badRequest } from '../../helpers/http';
 

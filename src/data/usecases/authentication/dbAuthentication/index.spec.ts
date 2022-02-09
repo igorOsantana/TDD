@@ -7,7 +7,7 @@ import {
   Encrypter,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
-} from './protocol';
+} from './protocols';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',

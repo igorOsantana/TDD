@@ -12,7 +12,7 @@ import {
   Authentication,
   Validation,
   AuthenticationModel,
-} from './protocol';
+} from './protocols';
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {

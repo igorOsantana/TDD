@@ -5,7 +5,7 @@ import {
   Encrypter,
   LoadAccountByEmailRepository,
   UpdateAccessTokenRepository,
-} from './protocol';
+} from './protocols';
 
 export class DbAuthentication implements Authentication {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository;
