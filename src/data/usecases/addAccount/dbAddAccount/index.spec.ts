@@ -1,10 +1,10 @@
-import { DbAddAccount } from './dbAddAccount';
+import { DbAddAccount } from '.';
 import {
   AccountModel,
   AddAccountModel,
   AddAccountRepository,
   Hasher,
-} from './dbAddAccountProtocols';
+} from './protocols';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'valid_id',
