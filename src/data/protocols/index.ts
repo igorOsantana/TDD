@@ -1,2 +1,2 @@
-export * from './encrypter';
-export * from './logErrorRepository';
+export * from './criptography/encrypter';
+export * from './db/logErrorRepository';
