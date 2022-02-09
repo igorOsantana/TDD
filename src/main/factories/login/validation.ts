@@ -1,6 +1,6 @@
 import { ValidationComposite } from '../../../presetation/helpers/validators/composite';
 import { ValidationRequiredField } from '../../../presetation/helpers/validators/requiredField';
-import { Validation } from '../../../presetation/helpers/validators/validation';
+import { Validation } from '../../../presetation/protocols';
 import { ValidationEmail } from '../../../presetation/helpers/validators/email';
 import { EmailValidatorAdapter } from '../../../utils/emailValidatorAdapter';
 
