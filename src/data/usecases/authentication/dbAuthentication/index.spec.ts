@@ -1,13 +1,14 @@
 import { DbAuthentication } from '.';
 import { AccountModel } from '../../../../domain/models/account';
 import { AuthenticationModel } from '../../../../domain/usecases/authentication';
+import { HashComparer } from '../../../protocols/criptography/hashComparer';
 import { LoadAccountByEmailRepository } from '../../../protocols/db/loadAccountByEmailRepository';
 
 const makeFakeAccount = (): AccountModel => ({
   id: 'any_id',
   name: 'any_name',
   email: 'any_email@mail.com',
-  password: 'any_password',
+  password: 'hashed_password',
 });
 
 const makeFakeAuthetication = (): AuthenticationModel => ({
@@ -26,16 +27,31 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepositoryStub();
 };
 
+const makeHashComparer = (): HashComparer => {
+  class HashComparerStub implements HashComparer {
+    async compare(value: string, hash: string): Promise<boolean> {
+      return Promise.resolve(true);
+    }
+  }
+  return new HashComparerStub();
+};
+
 interface SutTypes {
   sut: DbAuthentication;
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository;
+  hashComparerStub: HashComparer;
 }
 
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository();
+  const hashComparerStub = makeHashComparer();
   return {
-    sut: new DbAuthentication(loadAccountByEmailRepositoryStub),
+    sut: new DbAuthentication(
+      loadAccountByEmailRepositoryStub,
+      hashComparerStub
+    ),
     loadAccountByEmailRepositoryStub,
+    hashComparerStub,
   };
 };
 
@@ -69,5 +85,17 @@ describe('DbAuthentication UseCase', () => {
     const accessToken = await sut.auth(makeFakeAuthetication());
 
     expect(accessToken).toBeNull();
+  });
+
+  test('Should call HashComparer with correct values', async () => {
+    const { sut, hashComparerStub } = makeSut();
+    const loadSpy = jest.spyOn(hashComparerStub, 'compare');
+
+    await sut.auth(makeFakeAuthetication());
+
+    expect(loadSpy).toHaveBeenCalledWith(
+      makeFakeAuthetication().password,
+      makeFakeAccount().password
+    );
   });
 });
